@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+    <!ENTITY rfc2119 PUBLIC '' 
+      'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml'>
+]>
+
+<rfc category="info" ipr="trust200902" docName="draft-blanchet-regext-rdap-deployfindings-00">
+
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+
+<?rfc toc="yes" ?>
+<?rfc symrefs="yes" ?>
+<?rfc sortrefs="yes"?>
+<?rfc iprnotified="no" ?>
+<?rfc strict="yes" ?>
+<?rfc compact="yes" ?>
+
+<front>
+<title>RDAP Deployment Findings</title>
+<author initials='M.' surname="Blanchet" fullname='Marc Blanchet'>
+  <organization>Viagenie</organization>
+  <address>
+    <postal>
+      <street>246 Aberdeen</street>
+      <city>Quebec</city>
+      <region>QC</region>
+      <code>G1R 2E1</code>
+      <country>Canada</country>
+    </postal>
+    <email>Marc.Blanchet@viagenie.ca</email>
+    <uri>http://viagenie.ca</uri>
+  </address>
+</author>
+<date/>
+<abstract>
+<t>Registration Access Data Protocol(RDAP) is being deployed in domain and IP address registries. This document describes issues and findings regarding the deployment of the server implementations seen. It also provides recommendations for the specifications.</t>
+</abstract>
+</front>
+<middle>
+  <section title="Introduction">
+<t>While developing various tools and software related to RDAP, issues have been found and are documented below. This document should help in writing future version of the specifications and provide better conformant deployment. It is split in various sections based on where the fix should be applied. Obviously, there are different levels of severity of the issues, including nits or very minor. The actual instances and organisations running the RDAP servers where the issues were found are not listed.</t>
+  </section>
+  <section title="RFC7482">
+  <section title="Search patterns that are not">
+   <t>section 3.2.1 of <xref target="RFC7482"/> says: "domains?nsIp=ZZZZ.  ZZZZ is a search pattern representing an IPv4 [RFC1166] or IPv6 [RFC5952] address.".  Search pattern has been used throughout the document as something that can include ‘*’, while here, it does not.  The syntax statement is also misleading. Similarly, section 3.2.2 says: "nameservers?ip=YYYY YYYY is a search pattern representing an IPv4 [RFC1166] or IPv6 [RFC5952] address." 
+</t>
+<t>Recommendation: replace: "ZZZZ is a search pattern representing an IPv4" by "ZZZZ is an IPv4", "Syntax: domains?nsIp=&lt;domain search pattern&gt;" by "Syntax: domains?nsIp=&lt;nameserver IP address&gt;", "YYYY is a search pattern representing an IPv4" by "YYYY is an IPv4", "Syntax: nameservers?ip=&lt;nameserver search pattern&gt;" by "Syntax: nameservers?ip=&lt;nameserver IP address&gt;"
+</t>
+ </section>
+  </section>
+  <section title="IANA RDAP Registries Related Issues">
+    <t>This section describes issues related to the bootstrap registries as specified in <xref target="RFC7484"/>.</t>
+    <section title="superfluous char in registry">
+    <t></t>
+    </section>
+  </section>
+  <section title="Domain Registrar RDAP Server Location">
+   <t></t>
+  </section>
+  <section title="RDAP Responses">
+  <t>This section discusses issues found related to RDAP responses, specified in <xref target="RFC7483"/>.</t>
+ <section title="Registrant Entity too deep">
+   <t>An RDAP server returns the registrant entity in a subentity, which makes difficult to parse given the expectation is the registrant would be at the top level. Extract of the response: 
+<figure><artwork>
+{
+ entities: [ 
+  { 
+    "objectClassName": "entity",
+    "handle": "HANDLE1",
+    "roles": [ "abuse" ], 
+    "vcardArray": [ ... ],
+    "entities": [
+       {
+       "objectClassName": "entity",
+       "handle": "HANDLE2",
+       "roles": [ "registrant" ], 
+       "vcardArray": [ ... ],
+       }
+    ],
+],
+</artwork></figure>
+   Recommendation: put the registrant in the top-level entities as follows:
+<figure><artwork>
+{
+ entities: [
+  { 
+    "objectClassName": "entity",
+    "handle": "HANDLE1",
+    "roles": [ "abuse" ],
+    "vcardArray": [ ... ]
+  },
+  {
+    "objectClassName": "entity",
+    "handle": "HANDLE2",
+    "roles": [ "registrant" ],
+    "vcardArray": [ ... ],
+  }
+],
+</artwork></figure>
+</t>
+</section>
+  </section>
+  <section title="Security Considerations">
+     <t>Proper conformance to specifications helps security. However, no security issues have been found in the context of this draft.</t>
+  </section>
+  <section title="Acknowledgements">
+     <t>NAMES have provided input and suggestions to this document.</t>
+  </section>
+</middle>
+<back>
+  <references title="Normative References">
+    <?rfc include="reference.RFC.7482" ?>
+    <?rfc include="reference.RFC.7483" ?>
+  </references>
+  <references title="Informative References">
+    <?rfc include="reference.RFC.7484" ?>
+  </references>
+</back>
+</rfc>
