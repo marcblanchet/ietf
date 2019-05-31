@@ -121,6 +121,10 @@ The links relation values as specified in <xref target="RFC7483"/> section 4.3 r
   </section>
   <section title="RDAP Responses">
   <t>This section discusses issues found related to RDAP responses, specified in <xref target="RFC7483"/>.</t>
+<section title="Cross-origin resource sharing(CORS)">
+<t>As specified in <xref target="RFC7480"/>, the HTTP "Access-Control-Allow-Origin: *" header should be included in the responses, to enable Web clients to work properly. Some RDAP servers do not set this header.
+</t>
+</section>
  <section title="Registrant Entity Too Deep">
    <t>An RDAP server returns the registrant entity in a subentity, which makes difficult to parse given the expectation is the registrant would be at the top level. Extract of the seen response:
 <figure><artwork>
@@ -185,11 +189,12 @@ The links relation values as specified in <xref target="RFC7483"/> section 4.3 r
 </middle>
 <back>
   <references title="Normative References">
-    <?rfc include="reference.RFC.7482" ?>
-    <?rfc include="reference.RFC.7483" ?>
+<?rfc include="reference.RFC.7480" ?>
+<?rfc include="reference.RFC.7482" ?>
+<?rfc include="reference.RFC.7483" ?>
+<?rfc include="reference.RFC.7484" ?>
   </references>
   <references title="Informative References">
-    <?rfc include="reference.RFC.7484" ?>
 <?rfc include="reference.RFC.5988" ?>
   </references>
 </back>
