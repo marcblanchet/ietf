@@ -54,6 +54,78 @@
     <section title="superfluous char in registry">
     <t></t>
     </section>
+    <section title="Values not Registered or Similar">
+    <t>The <eref target="https://www.iana.org/assignments/rdap-json-values/rdap-json-values.xhtml"/> contains various values expected in JSON responses. The following table shows values not registered in the registry but seen in the field. The second column shows the possible corresponding values already registered.
+</t>
+  <texttable>
+   <preamble>Remarks Type</preamble>
+   <ttcol>Unregistered Values</ttcol>
+   <ttcol>Possibly Corresponding Registered Values</ttcol>
+   <c>object truncated due to server policy</c><c>object truncated due to authorization</c>
+   <c>Response truncated due to authorization</c><c>object truncated due to authorization</c>
+   <c>Object truncated due to authorization</c><c>object truncated due to authorization</c>
+   <c>object redacted due to authorization</c><c>object truncated due to authorization</c>
+  </texttable>
+  <texttable>
+   <preamble>Event Action</preamble>
+   <ttcol>Unregistered Values</ttcol>
+   <ttcol>Possibly Corresponding Registered Values</ttcol>
+   <c>delegation check</c><c></c>
+   <c>last correct delegation check</c><c></c>
+  </texttable>
+  <texttable>
+   <preamble>Status Value</preamble>
+   <ttcol>Unregistered Values</ttcol>
+   <ttcol>Possibly Corresponding Registered Values</ttcol>
+   <c>server deleted prohibited</c><c>server delete prohibited</c>
+   <c>ok</c><c>active</c>
+  </texttable>
+</section>
+<section title="Links Relation Values">
+  <t>
+The links relation values as specified in <xref target="RFC7483"/> section 4.3 refer to <xref target="RFC5988"/> which creates the IANA registry <eref target="https://www.iana.org/assignments/link-relations/link-relations.xhtml"/>. This registry contains a large number of values where most of them do not apply to the RDAP deployment. As seen with other values above that are similar to registered ones but not used, we list here the ones we have seen. It would be appropriate to further describes the main ones in the RFC so implementors focus on ones that are expected instead of picking the wrong ones in the IANA registry or to define new ones and do not register them.</t>
+  <texttable>
+   <preamble>Links Relation Values Seen</preamble>
+   <ttcol>Values</ttcol>
+   <c>about</c>
+   <c>alternate</c>
+<c>copyright</c>
+<c>describedBy</c>
+<c>help</c>
+<c>related</c>
+<c>self</c>
+<c>terms-of-service</c>
+<c>up</c>
+  </texttable>
+   </section>
+  <section title="RDAP Extensions not Registered">
+    <t>The <eref target="https://www.iana.org/assignments/rdap-extensions/rdap-extensions.xhtml"/> contains various extensions values expected in RDAP JSON responses in the rdapCconformance member. The following table shows values not registered in the registry but seen in the field. The second column shows the possible corresponding values already registered.
+</t>
+  <texttable>
+   <preamble></preamble>
+   <ttcol>Unregistered Values</ttcol>
+   <ttcol>Possibly Corresponding Registered Values</ttcol>
+   <c>rdap_objectTag_level_0</c><c>rdap_objectTag</c>
+   <c>rdap_openidc_level_0</c><c></c>
+   <c>icann_rdap_technical_implementation_guide_0</c><c></c>
+   <c>icann_rdap_response_profile_0</c><c></c>
+   <c>itNic_level_0</c><c></c>
+   <c>fred_version_0</c><c>fred</c>
+   <c>nicbr_level_0</c><c></c>
+   <c>ur_domain_check_level_0</c><c></c>
+   <c>history_version_0</c><c></c>
+  </texttable>
+<texttable>
+<preamble>TEMPLATE TO BE REMOVED</preamble>
+<ttcol>Unregistered Values</ttcol>
+<ttcol>Possibly Corresponding Registered Values</ttcol>
+<c></c><c></c>
+<c></c><c></c>
+<c></c><c></c>
+<c></c><c></c>
+<c></c><c></c>
+</texttable>
+  </section>
   </section>
   <section title="Domain Registrar RDAP Server Location">
    <t></t>
@@ -104,6 +176,9 @@
   <section title="Security Considerations">
      <t>Proper conformance to specifications helps security. However, no security issues have been found in the context of this draft.</t>
   </section>
+  <section title="IANA Considerations">
+   <t>This document request IANA to add the following values to this registry. TBD.</t>
+  </section>
   <section title="Acknowledgements">
      <t>NAMES have provided input and suggestions to this document.</t>
   </section>
@@ -115,6 +190,7 @@
   </references>
   <references title="Informative References">
     <?rfc include="reference.RFC.7484" ?>
+<?rfc include="reference.RFC.5988" ?>
   </references>
 </back>
 </rfc>
