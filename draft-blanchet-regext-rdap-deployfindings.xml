@@ -122,7 +122,7 @@ The links relation values as specified in <xref target="RFC7483"/> section 4.3 r
   <section title="RDAP Responses">
   <t>This section discusses issues found related to RDAP responses, specified in <xref target="RFC7483"/>.</t>
 <section title="Cross-origin resource sharing(CORS)">
-<t>As specified in <xref target="RFC7480"/>, the HTTP "Access-Control-Allow-Origin: *" header should be included in the responses, to enable Web clients to work properly. Some RDAP servers do not set this header.
+<t>As specified in <xref target="RFC7480"/>, the HTTP "Access-Control-Allow-Origin: *" header should be included in the responses, to enable Web clients to work properly. Some RDAP servers do not set this header. RFC7480 says "it is RECOMMENDED that servers". It should be updated to "for any public Internet deployment, servers MUST".
 </t>
 </section>
  <section title="Registrant Entity Too Deep">
