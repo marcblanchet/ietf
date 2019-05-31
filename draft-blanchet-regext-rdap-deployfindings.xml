@@ -17,7 +17,7 @@
 <?rfc compact="yes" ?>
 
 <front>
-<title>RDAP Deployment Findings</title>
+<title>RDAP Deployment Findings and Update</title>
 <author initials='M.' surname="Blanchet" fullname='Marc Blanchet'>
   <organization>Viagenie</organization>
   <address>
@@ -40,14 +40,6 @@
 <middle>
   <section title="Introduction">
 <t>While developing various tools and software related to RDAP, issues have been found and are documented below. This document should help in writing future version of the specifications and provide better conformant deployment. It is split in various sections based on where the fix should be applied. Obviously, there are different levels of severity of the issues, including nits or very minor. The actual instances and organisations running the RDAP servers where the issues were found are not listed.</t>
-  </section>
-  <section title="RFC7482">
-  <section title="Search patterns that are not">
-   <t>section 3.2.1 of <xref target="RFC7482"/> says: "domains?nsIp=ZZZZ.  ZZZZ is a search pattern representing an IPv4 [RFC1166] or IPv6 [RFC5952] address.".  Search pattern has been used throughout the document as something that can include ‘*’, while here, it does not.  The syntax statement is also misleading. Similarly, section 3.2.2 says: "nameservers?ip=YYYY YYYY is a search pattern representing an IPv4 [RFC1166] or IPv6 [RFC5952] address." 
-</t>
-<t>Recommendation: replace: "ZZZZ is a search pattern representing an IPv4" by "ZZZZ is an IPv4", "Syntax: domains?nsIp=&lt;domain search pattern&gt;" by "Syntax: domains?nsIp=&lt;nameserver IP address&gt;", "YYYY is a search pattern representing an IPv4" by "YYYY is an IPv4", "Syntax: nameservers?ip=&lt;nameserver search pattern&gt;" by "Syntax: nameservers?ip=&lt;nameserver IP address&gt;"
-</t>
- </section>
   </section>
   <section title="IANA RDAP Registries Related Issues">
     <t>This section describes issues related to the bootstrap registries as specified in <xref target="RFC7484"/>.</t>
@@ -81,23 +73,6 @@
    <c>ok</c><c>active</c>
   </texttable>
 </section>
-<section title="Links Relation Values">
-  <t>
-The links relation values as specified in <xref target="RFC7483"/> section 4.3 refer to <xref target="RFC5988"/> which creates the IANA registry <eref target="https://www.iana.org/assignments/link-relations/link-relations.xhtml"/>. This registry contains a large number of values where most of them do not apply to the RDAP deployment. As seen with other values above that are similar to registered ones but not used, we list here the ones we have seen. It would be appropriate to further describes the main ones in the RFC so implementors focus on ones that are expected instead of picking the wrong ones in the IANA registry or to define new ones and do not register them.</t>
-  <texttable>
-   <preamble>Links Relation Values Seen</preamble>
-   <ttcol>Values</ttcol>
-   <c>about</c>
-   <c>alternate</c>
-<c>copyright</c>
-<c>describedBy</c>
-<c>help</c>
-<c>related</c>
-<c>self</c>
-<c>terms-of-service</c>
-<c>up</c>
-  </texttable>
-   </section>
   <section title="RDAP Extensions not Registered">
     <t>The <eref target="https://www.iana.org/assignments/rdap-extensions/rdap-extensions.xhtml"/> contains various extensions values expected in RDAP JSON responses in the rdapCconformance member. The following table shows values not registered in the registry but seen in the field. The second column shows the possible corresponding values already registered.
 </t>
@@ -116,7 +91,7 @@ The links relation values as specified in <xref target="RFC7483"/> section 4.3 r
    <c>history_version_0</c><c></c>
   </texttable>
 <texttable>
-<preamble>TEMPLATE TO BE REMOVED</preamble>
+<preamble>TBD TEMPLATE TO BE REMOVED</preamble>
 <ttcol>Unregistered Values</ttcol>
 <ttcol>Possibly Corresponding Registered Values</ttcol>
 <c></c><c></c>
@@ -126,14 +101,28 @@ The links relation values as specified in <xref target="RFC7483"/> section 4.3 r
 <c></c><c></c>
 </texttable>
   </section>
-  </section>
-  <section title="Domain Registrar RDAP Server Location">
-   <t></t>
+<section title="Links Relation Values">
+<t>
+The links relation values as specified in <xref target="RFC7483"/> section 4.3 refer to <xref target="RFC5988"/> which creates the IANA registry <eref target="https://www.iana.org/assignments/link-relations/link-relations.xhtml"/>. This registry contains a large number of values where most of them do not apply to the RDAP deployment. As seen with other values above that are similar to registered ones but not used, we list here the ones we have seen. It would be appropriate to further describes the main ones in the RFC so implementors focus on ones that are expected instead of picking the wrong ones in the IANA registry or to define new ones and do not register them.</t>
+<texttable>
+<preamble>Links Relation Values Seen</preamble>
+<ttcol>Values</ttcol>
+<c>about</c>
+<c>alternate</c>
+<c>copyright</c>
+<c>describedBy</c>
+<c>help</c>
+<c>related</c>
+<c>self</c>
+<c>terms-of-service</c>
+<c>up</c>
+</texttable>
+</section>
   </section>
   <section title="RDAP Responses">
   <t>This section discusses issues found related to RDAP responses, specified in <xref target="RFC7483"/>.</t>
- <section title="Registrant Entity too deep">
-   <t>An RDAP server returns the registrant entity in a subentity, which makes difficult to parse given the expectation is the registrant would be at the top level. Extract of the response: 
+ <section title="Registrant Entity Too Deep">
+   <t>An RDAP server returns the registrant entity in a subentity, which makes difficult to parse given the expectation is the registrant would be at the top level. Extract of the seen response:
 <figure><artwork>
 {
  entities: [ 
@@ -173,6 +162,17 @@ The links relation values as specified in <xref target="RFC7483"/> section 4.3 r
 </t>
 </section>
   </section>
+<section title="Domain Registrar RDAP Server Location">
+<t></t>
+</section>
+<section title="RFC7482">
+<section title="Search patterns that are not">
+<t>section 3.2.1 of <xref target="RFC7482"/> says: "domains?nsIp=ZZZZ.  ZZZZ is a search pattern representing an IPv4 [RFC1166] or IPv6 [RFC5952] address.".  Search pattern has been used throughout the document as something that can include ‘*’, while here, it does not.  The syntax statement is also misleading. Similarly, section 3.2.2 says: "nameservers?ip=YYYY YYYY is a search pattern representing an IPv4 [RFC1166] or IPv6 [RFC5952] address."
+</t>
+<t>Recommendation: replace: "ZZZZ is a search pattern representing an IPv4" by "ZZZZ is an IPv4", "Syntax: domains?nsIp=&lt;domain search pattern&gt;" by "Syntax: domains?nsIp=&lt;nameserver IP address&gt;", "YYYY is a search pattern representing an IPv4" by "YYYY is an IPv4", "Syntax: nameservers?ip=&lt;nameserver search pattern&gt;" by "Syntax: nameservers?ip=&lt;nameserver IP address&gt;"
+</t>
+</section>
+</section>
   <section title="Security Considerations">
      <t>Proper conformance to specifications helps security. However, no security issues have been found in the context of this draft.</t>
   </section>
@@ -180,7 +180,7 @@ The links relation values as specified in <xref target="RFC7483"/> section 4.3 r
    <t>This document request IANA to add the following values to this registry. TBD.</t>
   </section>
   <section title="Acknowledgements">
-     <t>NAMES have provided input and suggestions to this document.</t>
+     <t>TBD NAMES have provided input and suggestions to this document.</t>
   </section>
 </middle>
 <back>
