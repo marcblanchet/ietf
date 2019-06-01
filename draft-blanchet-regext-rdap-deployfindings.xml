@@ -91,10 +91,9 @@
    <c>ur_domain_check_level_0</c><c></c>
    <c>history_version_0</c><c></c>
   </texttable>
-<texttable>
   </section>
 <section title="Object Class Name empty">
-<t>A non-conformant server sends the following answer, where the value of "objectClassName" is an empty string (as well as "handle" also empty). As per <xref target="RFC7483"> section 4.9, this "objectClassName" value is required.
+<t>A non-conformant server sends the following answer, where the value of "objectClassName" is an empty string (as well as "handle" also empty). As per <xref target="RFC7483"/> section 4.9, this "objectClassName" value is required.
 Extract of the seen response:
 <figure><artwork>
 {
