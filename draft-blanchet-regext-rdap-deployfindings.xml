@@ -64,6 +64,7 @@
    <ttcol>Possibly Corresponding Registered Values</ttcol>
    <c>delegation check</c><c></c>
    <c>last correct delegation check</c><c></c>
+   <c>last update</c><c>last changed</c>
   </texttable>
   <texttable>
    <preamble>Status Value</preamble>
@@ -91,16 +92,25 @@
    <c>history_version_0</c><c></c>
   </texttable>
 <texttable>
-<preamble>TBD TEMPLATE TO BE REMOVED</preamble>
-<ttcol>Unregistered Values</ttcol>
-<ttcol>Possibly Corresponding Registered Values</ttcol>
-<c></c><c></c>
-<c></c><c></c>
-<c></c><c></c>
-<c></c><c></c>
-<c></c><c></c>
-</texttable>
   </section>
+<section title="Object Class Name empty">
+<t>A non-conformant server sends the following answer, where the value of "objectClassName" is an empty string (as well as "handle" also empty). As per <xref target="RFC7483"> section 4.9, this "objectClassName" value is required.
+Extract of the seen response:
+<figure><artwork>
+{
+  entities: [
+    {
+    "entities": [
+      {
+      "objectClassName": "",
+      "handle": "",
+      }
+    ],
+  ],
+</artwork></figure>
+</t>
+</section>
+
 <section title="Links Relation Values">
 <t>
 The links relation values as specified in <xref target="RFC7483"/> section 4.3 refer to <xref target="RFC5988"/> which creates the IANA registry <eref target="https://www.iana.org/assignments/link-relations/link-relations.xhtml"/>. This registry contains a large number of values where most of them do not apply to the RDAP deployment. As seen with other values above that are similar to registered ones but not used, we list here the ones we have seen. It would be appropriate to further describes the main ones in the RFC so implementors focus on ones that are expected instead of picking the wrong ones in the IANA registry or to define new ones and do not register them.</t>
