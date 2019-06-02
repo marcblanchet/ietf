@@ -28,26 +28,24 @@
       <code>G1R 2E1</code>
       <country>Canada</country>
     </postal>
-    <email>Marc.Blanchet@viagenie.ca</email>
+    <email>marc.blanchet@viagenie.ca</email>
     <uri>http://viagenie.ca</uri>
   </address>
 </author>
 <date/>
 <abstract>
-<t>Registration Access Data Protocol(RDAP) is being deployed in domain and IP address registries. This document describes issues and findings regarding the deployment of the server implementations seen. It also provides recommendations for the specifications.</t>
+<t>Registration Access Data Protocol(RDAP) is being deployed in domain and IP address registries. This document describes issues and findings while interfacing with the known server implementations and deployments. It also provides recommendations for the specifications.</t>
 </abstract>
 </front>
 <middle>
   <section title="Introduction">
 <t>While developing various tools and software related to RDAP, issues have been found and are documented below. This document should help in writing future version of the specifications and provide better conformant deployment. It is split in various sections based on where the fix should be applied. Obviously, there are different levels of severity of the issues, including nits or very minor. The actual instances and organisations running the RDAP servers where the issues were found are not listed.</t>
   </section>
-  <section title="IANA RDAP Registries Related Issues">
-    <t>This section describes issues related to the bootstrap registries as specified in <xref target="RFC7484"/>.</t>
-    <section title="superfluous char in registry">
-    <t></t>
-    </section>
+<section title="IANA RDAP Registries Related Issues">
+<t>This section describes issues related to the IANA non-Bootstrap registries as specified in <xref target="RFC7483"/>.</t>
     <section title="Values not Registered or Similar">
-    <t>The <eref target="https://www.iana.org/assignments/rdap-json-values/rdap-json-values.xhtml"/> contains various values expected in JSON responses. The following table shows values not registered in the registry but seen in the field. The second column shows the possible corresponding values already registered.
+    <t>The <eref target="https://www.iana.org/assignments/rdap-json-values/rdap-json-values.xhtml">IANA RDAP JSON Values registry</eref> contains various values expected in JSON responses. The following table shows values not registered in the registry but seen in the field. The second column shows the possible corresponding values already registered. </t>
+<t>Recommendation: implementations should replace their custom values with the registered ones, when one exist. Implementors should register their values when there is no corresponding registered one.
 </t>
   <texttable>
    <preamble>Remarks Type</preamble>
@@ -75,7 +73,9 @@
   </texttable>
 </section>
   <section title="RDAP Extensions not Registered">
-    <t>The <eref target="https://www.iana.org/assignments/rdap-extensions/rdap-extensions.xhtml"/> contains various extensions values expected in RDAP JSON responses in the rdapCconformance member. The following table shows values not registered in the registry but seen in the field. The second column shows the possible corresponding values already registered.
+    <t>The <eref target="https://www.iana.org/assignments/rdap-extensions/rdap-extensions.xhtml">IANA RDAP Extensions registry</eref> contains various extensions values expected in RDAP JSON responses in the rdapCconformance member. The following table shows values not registered in the registry but seen in the field. The second column shows the possible corresponding values already registered.
+</t>
+<t>Recommendation: implementations should replace their custom values with the registered ones, when one exist. Implementors should register their values when there is no corresponding registered one.
 </t>
   <texttable>
    <preamble></preamble>
@@ -92,27 +92,34 @@
    <c>history_version_0</c><c></c>
   </texttable>
   </section>
+  </section>
+  <section title="RDAP Responses">
+  <t>This section discusses issues found related to RDAP responses, specified in <xref target="RFC7483"/>.</t>
+<section title="Cross-origin resource sharing(CORS)">
+<t>As specified in <xref target="RFC7480"/>, the HTTP "Access-Control-Allow-Origin: *" header should be included in the responses, to enable Web clients to work properly. Some RDAP servers do not set this header. RFC7480 says "it is RECOMMENDED that servers". It should be updated to "for any public Internet deployment, servers MUST".
+</t>
+</section>
 <section title="Object Class Name empty">
 <t>A non-conformant server sends the following answer, where the value of "objectClassName" is an empty string (as well as "handle" also empty). As per <xref target="RFC7483"/> section 4.9, this "objectClassName" value is required.
 Extract of the seen response:
 <figure><artwork>
 {
   entities: [
-    {
-    "entities": [
-      {
-      "objectClassName": "",
-      "handle": "",
-      }
-    ],
-  ],
+   {
+   "entities": [
+     {
+     "objectClassName": "",
+     "handle": "",
+     }
+   ],
+ ],
+}
 </artwork></figure>
 </t>
 </section>
-
 <section title="Links Relation Values">
 <t>
-The links relation values as specified in <xref target="RFC7483"/> section 4.3 refer to <xref target="RFC5988"/> which creates the IANA registry <eref target="https://www.iana.org/assignments/link-relations/link-relations.xhtml"/>. This registry contains a large number of values where most of them do not apply to the RDAP deployment. As seen with other values above that are similar to registered ones but not used, we list here the ones we have seen. It would be appropriate to further describes the main ones in the RFC so implementors focus on ones that are expected instead of picking the wrong ones in the IANA registry or to define new ones and do not register them.</t>
+The links relation values as specified in <xref target="RFC7483"/> section 4.3 refer to <xref target="RFC5988"/> which creates the <eref target="https://www.iana.org/assignments/link-relations/link-relations.xhtml">IANA Link Relations registry</eref>. This registry contains a large number of values where most of them do not apply to the RDAP deployment. As seen with other values above that are similar to registered ones but not used, we list here the ones we have seen. It would be appropriate to further describes the main ones in the RFC so implementors focus on ones that are expected instead of picking the wrong ones in the IANA registry or to define new ones and do not register them.</t>
 <texttable>
 <preamble>Links Relation Values Seen</preamble>
 <ttcol>Values</ttcol>
@@ -127,11 +134,27 @@ The links relation values as specified in <xref target="RFC7483"/> section 4.3 r
 <c>up</c>
 </texttable>
 </section>
-  </section>
-  <section title="RDAP Responses">
-  <t>This section discusses issues found related to RDAP responses, specified in <xref target="RFC7483"/>.</t>
-<section title="Cross-origin resource sharing(CORS)">
-<t>As specified in <xref target="RFC7480"/>, the HTTP "Access-Control-Allow-Origin: *" header should be included in the responses, to enable Web clients to work properly. Some RDAP servers do not set this header. RFC7480 says "it is RECOMMENDED that servers". It should be updated to "for any public Internet deployment, servers MUST".
+<section title="Related link pointing to self causes infinite loop">
+<t>An RDAP server returns a link of "rel": "related" is pointing to itself, therefore causing the RDAP client to fetch the object again, then read the related link and then fetch again, creating an infinite loop. Extract of the seen response:
+<figure><artwork>
+{
+  "links": [
+    {
+    "title": "Self",
+    "rel": "self",
+    "type": "application/rdap+json",
+    "href": "https://rdapserver.example.com/domain/example.net"
+    },
+    {
+    "title": "Registrar Data for this object",
+    "rel": "related",
+    "href": "https://rdapserver.example.com/domain/example.net",
+    "type": "application/rdap+json"
+    }
+  ],
+}
+</artwork></figure>
+Recommendation: do not put related link same as self. RFC7483 section 4.2 should be updated to add the following text: "A link of "rel": "related" should not have the "href" value the same as the value of "href" of link of "rel": "self".
 </t>
 </section>
  <section title="Registrant Entity Too Deep">
@@ -175,17 +198,34 @@ The links relation values as specified in <xref target="RFC7483"/> section 4.3 r
 </t>
 </section>
   </section>
+<section title="Queries">
+ <t>This section talks about support of RFC7482 queries and the RDAP server behaviors seen.</t>
+ <section title="URL encoding of :">
+  <t>For RIR registries, the ip query may include an IPv6 address which then includes one or many ":". Clients may decide to do percent-encoding of the query. In one RDAP server, the server rejected the percent-encoded query of an IPv6 address. Recommendation: accept either percent-encoded queries or non-percent encoded queries.
+  </t>
+ </section>
+</section>
 <section title="Domain Registrar RDAP Server Location">
-<t></t>
+<t>The <eref target="https://www.icann.org/en/system/files/files/rdap-technical-implementation-guide-15feb19-en.pdf">ICANN RDAP Profile</eref> section 3.2 requires the domain registries who do not have registrant information (so-called thin registries) to put a specific link of "rel": "related" pointing to the domain registrar responsible for the domain being queried, so that a client can get the registrant information using a second query to the related link. However, the semantics seems ambiguous as other RDAP servers may use the "rel": "related" for other related means, but not the specific semantic of finding the registrant data. Therefore, a possible mitigation is to define a new "rel" type of "registrantInfo" (mnemonic TBD) to carry the specific semantic of registrant info.</t>
 </section>
-<section title="RFC7482">
+<section title="Issues related to RFC7482">
 <section title="Search patterns that are not">
-<t>section 3.2.1 of <xref target="RFC7482"/> says: "domains?nsIp=ZZZZ.  ZZZZ is a search pattern representing an IPv4 [RFC1166] or IPv6 [RFC5952] address.".  Search pattern has been used throughout the document as something that can include ‘*’, while here, it does not.  The syntax statement is also misleading. Similarly, section 3.2.2 says: "nameservers?ip=YYYY YYYY is a search pattern representing an IPv4 [RFC1166] or IPv6 [RFC5952] address."
+<t>Section 3.2.1 of <xref target="RFC7482"/> says: "domains?nsIp=ZZZZ.  ZZZZ is a search pattern representing an IPv4 [RFC1166] or IPv6 [RFC5952] address.".  Search pattern has been used throughout the document as something that can include ‘*’, while here, it does not.  The syntax statement is also misleading. Similarly, section 3.2.2 says: "nameservers?ip=YYYY YYYY is a search pattern representing an IPv4 [RFC1166] or IPv6 [RFC5952] address."
 </t>
-<t>Recommendation: replace: "ZZZZ is a search pattern representing an IPv4" by "ZZZZ is an IPv4", "Syntax: domains?nsIp=&lt;domain search pattern&gt;" by "Syntax: domains?nsIp=&lt;nameserver IP address&gt;", "YYYY is a search pattern representing an IPv4" by "YYYY is an IPv4", "Syntax: nameservers?ip=&lt;nameserver search pattern&gt;" by "Syntax: nameservers?ip=&lt;nameserver IP address&gt;"
+<t>Recommendation: in <xref target="RFC7482"/>, replace: "ZZZZ is a search pattern representing an IPv4" by "ZZZZ is an IPv4", "Syntax: domains?nsIp=&lt;domain search pattern&gt;" by "Syntax: domains?nsIp=&lt;nameserver IP address&gt;", "YYYY is a search pattern representing an IPv4" by "YYYY is an IPv4", "Syntax: nameservers?ip=&lt;nameserver search pattern&gt;" by "Syntax: nameservers?ip=&lt;nameserver IP address&gt;"
 </t>
 </section>
 </section>
+<section title="IANA RDAP Bootstrap Registries Related Issues">
+<t>This section describes issues related to the IANA Bootstrap registries as specified in <xref target="RFC7484"/>.</t>
+<section title="Missing Trailing Char in Bootstrap Registries">
+<t><xref target="RFC7484"/> section 3 says: "Base RDAP URLs MUST have a trailing "/" character". However, some values in the various IANA Bootstrap registries do not have the trailing "/" character. These should be added to provide consistency.</t>
+</section>
+<section title="Single target value">
+<t><xref target="RFC7484"/> provides a way to list multiple RDAP servers for an entry. This flexibility was designed initially to support multiple URI types, such as http: and https, and to provide some level of redundancy. However, given that security deployment policy is to use https everywhere and redundancy can be accomplished in other ways, deployment has shown that all entries in all bootstrap registries have a single target RDAP URL value. Therefore, we can consider updating the RFC to provide only one target value. However, this should be done carefully to avoid breaking current deployed clients.</t>
+</section>
+</section>
+
   <section title="Security Considerations">
      <t>Proper conformance to specifications helps security. However, no security issues have been found in the context of this draft.</t>
   </section>
@@ -193,7 +233,7 @@ The links relation values as specified in <xref target="RFC7483"/> section 4.3 r
    <t>This document request IANA to add the following values to this registry. TBD.</t>
   </section>
   <section title="Acknowledgements">
-     <t>TBD NAMES have provided input and suggestions to this document.</t>
+     <t>Audric Schiltknecht, TBD have provided input and suggestions to this document.</t>
   </section>
 </middle>
 <back>
